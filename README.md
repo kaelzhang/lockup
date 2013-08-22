@@ -20,19 +20,19 @@ If the lock already exists, `callback` will put in a queue which will be execute
 
 Notice that, `lockup.lock` could work with multiple `process`es.
 
-#### file `path`
+##### file `path`
 
 The path of the lock file.
 
-#### options `Object={}`
+##### options `Object={}`
 
 Optional, default to `{}`;
 
-#### callback `function(err)`
+##### callback `function(err)`
 
 The callback function.
 
-#### err `Error|String`
+##### err `Error|String`
 
 `Error` instance or error message.
 
