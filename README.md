@@ -20,6 +20,23 @@ If the lock already exists, `callback` will put in a queue which will be execute
 
 Notice that, `lockup.lock` could work with multiple `process`es.
 
+#### file `path`
+
+The path of the lock file.
+
+#### options `Object={}`
+
+Optional, default to `{}`;
+
+#### callback `function(err)`
+
+The callback function.
+
+#### err `Error|String`
+
+`Error` instance or error message.
+
+
 ### lockup.unlock(file)
 
 Release a lock.
@@ -37,7 +54,9 @@ function foo(delay){
     lockup.lock(file, function (err) {
         setTimeout(function () {
         	console.log('counter', c);
-            lockup.unlock(file)
+        	
+        	// release the lock.
+            lockup.unlock(file);
         }, delay);
     });
 }
