@@ -12,6 +12,7 @@ var ev = {
     __proto__: EE.prototype
 };
 
+var own = {};
 
 // Create a lock if the lock is not existed, then run the `callback` function.
 // If the lock exists, `callback` will put in a queue
@@ -30,6 +31,10 @@ lockup.lock = function (file, options, callback) {
     // Create file first, and save process ticks
     node_fs.open(file, 'wx', function (err, fd) {
         if(!err){
+
+            // Then the current process will own the lock from now on
+            own[file] = true;
+
             node_fs.close(fd, function () {
                 callback(null); 
             });
@@ -50,14 +55,20 @@ function queue (file, options, callback) {
     ev.on(file, function () {
         lockup.lock(file, options, callback);
     });
-};
+}
 
 
 // Destroy the lock
 lockup.unlock = function (file) {
     file = node_path.resolve(file);
 
-    node_fs.unlink(file, function () {
+    node_fs.unlink(file, function (err) {
+        if(!err){
+
+            // no longer own the lock
+            delete own[file];
+        }
+
         run_queue(file);
     });
 };
@@ -65,6 +76,21 @@ lockup.unlock = function (file) {
 function run_queue (file) {
     ev.emit(file);
     ev.removeAllListeners(file);
-};
+}
+
+
+function NOOP(){};
+
+// Clean and release all locks owned by the current process
+function clean_locks () {
+    var file;
+
+    for(file in own){
+        node_fs.unlink(file, NOOP);
+    }
+}
+
+process.on('exit', clean_locks);
+process.on('uncaughtException', clean_locks);
 
 
