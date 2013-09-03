@@ -1,6 +1,6 @@
 {
   "name": "lockup",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lockup uses a certain lock file to queue and deal with inter-process asynchronous resources.",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,9 @@
     "file",
     "queue",
     "patch",
-    "locker"
+    "locker",
+    "process",
+    "inter-process"
   ],
   "author": "kael",
   "license": "MIT",

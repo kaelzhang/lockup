@@ -18,7 +18,7 @@ var own = {};
 // If the lock exists, `callback` will put in a queue
 
 // @param {path} file
-// @param {Object=} options
+// @param {Object=} options TODO
 // @param {function(err)} callback
 lockup.lock = function (file, options, callback) {
     file = node_path.resolve(file);
@@ -91,6 +91,9 @@ function clean_locks () {
 }
 
 process.on('exit', clean_locks);
-process.on('uncaughtException', clean_locks);
+
+// if exceptions are already caught, do not clean the lock file
+// if there's an uncaught exception, will be an 'exit' event after 'uncaughtException' event
+// process.on('uncaughtException', clean_locks);
 
 
